@@ -23,6 +23,7 @@ module.exports = [
             'knddras-strapi-bucket.s3.ap-southeast-2.amazonaws.com',
             'market-assets.strapi.io'
           ],
+          'script-src': ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net'],
           upgradeInsecureRequests: null,
         },
       },
