@@ -13,6 +13,7 @@ module.exports = [
             'blob:',
             'dl.airtable.com',
             'knddras-strapi-bucket.s3.ap-southeast-2.amazonaws.com',
+            'market-assets.strapi.io'
           ],
           'media-src': [
             "'self'",
@@ -20,6 +21,7 @@ module.exports = [
             'blob:',
             'dl.airtable.com',
             'knddras-strapi-bucket.s3.ap-southeast-2.amazonaws.com',
+            'market-assets.strapi.io'
           ],
           upgradeInsecureRequests: null,
         },
