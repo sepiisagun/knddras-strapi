@@ -1,4 +1,4 @@
-module.exports = [
+module.exports = ({ env }) => [
   'strapi::errors',
   {
     name: 'strapi::security',
@@ -11,17 +11,20 @@ module.exports = [
             "'self'",
             'data:',
             'blob:',
+	    'cdn.jsdelivr.net',
             'dl.airtable.com',
-            'knddras-strapi-bucket.s3.ap-southeast-2.amazonaws.com',
-            'market-assets.strapi.io'
+            `https://${env("AWS_BUCKET")}.s3.amazonaws.com`,
+            'market-assets.strapi.io',
           ],
           'media-src': [
             "'self'",
             'data:',
             'blob:',
+	    'cdn.jsdelivr.net',
+	    'strapi.io',
             'dl.airtable.com',
-            'knddras-strapi-bucket.s3.ap-southeast-2.amazonaws.com',
-            'market-assets.strapi.io'
+            `https://${env("AWS_BUCKET")}.s3.amazonaws.com`,
+            'market-assets.strapi.io',
           ],
           'script-src': ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net'],
           upgradeInsecureRequests: null,
@@ -29,7 +32,14 @@ module.exports = [
       },
     },
   },
-  'strapi::cors',
+  {
+	name: 'strapi::cors',
+	config: {
+		enabled: true,
+		headers: '*',
+		origin: '*',
+	},
+  },
   'strapi::poweredBy',
   'strapi::logger',
   'strapi::query',
