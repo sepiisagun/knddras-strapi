@@ -2,6 +2,7 @@ const path = require('path');
 
 module.exports = ({ env }) => {
   const client = env('DATABASE_CLIENT', 'sqlite');
+  const ssl = env('DEVELOPMENT') === 'pipeline' ? { rejectUnauthorized: env.bool('DATABASE_SSL_SELF', false), } : false;
 
   const connections = {
     mysql: {
@@ -55,7 +56,7 @@ module.exports = ({ env }) => {
         database: env('DATABASE_NAME', 'strapi'),
         user: env('DATABASE_USERNAME', 'strapi'),
         password: env('DATABASE_PASSWORD', 'strapi'),
-        ssl: { rejectUnauthorized: env.bool('DATABASE_SSL_SELF', false), },
+        ssl: ssl,
         schema: env('DATABASE_SCHEMA', 'public'),
       },
       pool: { min: env.int('DATABASE_POOL_MIN', 2), max: env.int('DATABASE_POOL_MAX', 10) },
