@@ -33,6 +33,7 @@ module.exports = ({ env }) => [
       },
     },
   },
+  'strapi::cors',
   'strapi::poweredBy',
   'strapi::logger',
   'strapi::query',
