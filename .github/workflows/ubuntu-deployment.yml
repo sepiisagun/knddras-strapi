@@ -1,0 +1,56 @@
+name: Build Strapi Files & Deploy to Ubuntu server
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  update:
+    name: Update
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull updates
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            cd ${{ secrets.DEPLOY_TARGET_HOME }}/${{ secrets.DEPLOY_TARGET }}
+            git pull
+            
+  install:
+    name: Install
+    needs: update
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install and update dependencies
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            cd ${{ secrets.DEPLOY_TARGET_HOME }}/${{ secrets.DEPLOY_TARGET }}
+            export ${{ secrets.DEPLOY_TARGET_HOME }}/.nvm
+            source ${{ secrets.DEPLOY_TARGET_HOME }}/.nvm/nvm.sh
+            nvm use 18
+            yarn install
+  build:
+    name: Build
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build the project
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            cd ${{ secrets.DEPLOY_TARGET_HOME }}/${{ secrets.DEPLOY_TARGET }}
+            export ${{ secrets.DEPLOY_TARGET_HOME }}/.nvm
+            source ${{ secrets.DEPLOY_TARGET_HOME }}/.nvm/nvm.sh
+            nvm use 18
+            yarn build
+            pm2 restart knddras-employees
