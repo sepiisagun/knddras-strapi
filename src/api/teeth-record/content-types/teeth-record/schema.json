@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "teeth_records",
+  "info": {
+    "singularName": "teeth-record",
+    "pluralName": "teeth-records",
+    "displayName": "Teeth Record"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "teethRecord": {
+      "type": "json",
+      "required": true
+    },
+    "record": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::record.record"
+    }
+  }
+}

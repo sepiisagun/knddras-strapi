@@ -1,0 +1,24 @@
+{
+  "kind": "collectionType",
+  "collectionName": "dental_charts",
+  "info": {
+    "singularName": "dental-chart",
+    "pluralName": "dental-charts",
+    "displayName": "Dental Chart"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "dentalCondition": {
+      "type": "json",
+      "required": true
+    },
+    "dental_record": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::dental-record.dental-record"
+    }
+  }
+}

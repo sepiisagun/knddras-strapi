@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "dental_records",
+  "info": {
+    "singularName": "dental-record",
+    "pluralName": "dental-records",
+    "displayName": "Dental Record"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "periodental": {
+      "type": "json",
+      "required": true
+    },
+    "occlusion": {
+      "type": "json",
+      "required": true
+    },
+    "appliances": {
+      "type": "json",
+      "required": true
+    },
+    "tmd": {
+      "type": "json",
+      "required": true
+    },
+    "xRay": {
+      "type": "json",
+      "required": true
+    },
+    "record": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::record.record"
+    }
+  }
+}

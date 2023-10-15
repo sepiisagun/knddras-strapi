@@ -1,0 +1,19 @@
+{
+  "kind": "collectionType",
+  "collectionName": "tooth_statuses",
+  "info": {
+    "singularName": "tooth-status",
+    "pluralName": "tooth-statuses",
+    "displayName": "Tooth Status"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "status": {
+      "type": "string",
+      "required": true
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "medicals",
+  "info": {
+    "singularName": "medical",
+    "pluralName": "medicals",
+    "displayName": "Medical",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "previousDentist": {
+      "type": "string",
+      "required": true
+    },
+    "lastVisit": {
+      "type": "date"
+    },
+    "physicianName": {
+      "type": "string",
+      "required": true
+    },
+    "physicianAddress": {
+      "type": "text",
+      "required": true
+    },
+    "bloodType": {
+      "type": "string"
+    },
+    "bleedTime": {
+      "type": "float"
+    },
+    "allergies": {
+      "type": "json",
+      "required": true
+    },
+    "record": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::record.record"
+    }
+  }
+}
