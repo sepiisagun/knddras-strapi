@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "treatments",
+  "info": {
+    "singularName": "treatment",
+    "pluralName": "treatments",
+    "displayName": "Treatment"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "procedure": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::procedure.procedure"
+    },
+    "record": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::record.record"
+    }
+  }
+}

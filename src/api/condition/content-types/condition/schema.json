@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "conditions",
+  "info": {
+    "singularName": "condition",
+    "pluralName": "conditions",
+    "displayName": "Condition",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "conditions": {
+      "type": "json",
+      "required": true
+    },
+    "record": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::record.record"
+    }
+  }
+}
