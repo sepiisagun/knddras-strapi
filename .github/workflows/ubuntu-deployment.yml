@@ -59,4 +59,4 @@ jobs:
             source ${{ secrets.DEPLOY_TARGET_HOME }}/.nvm/nvm.sh
             nvm use 18
             yarn build
-            pm2 restart knddras-employees
+            pm2 restart knddras-api
