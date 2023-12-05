@@ -4,7 +4,8 @@
   "info": {
     "singularName": "request",
     "pluralName": "requests",
-    "displayName": "Request"
+    "displayName": "Request",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -16,10 +17,17 @@
       "required": true
     },
     "slot": {
-      "type": "time",
+      "type": "enumeration",
+      "enum": [
+        "AM",
+        "PM"
+      ],
       "required": true
     },
     "notes": {
+      "type": "text"
+    },
+    "reason": {
       "type": "text"
     },
     "status": {
@@ -27,10 +35,11 @@
       "enum": [
         "PENDING",
         "ACCEPTED",
-        "REJECTED"
+        "REJECTED",
+        "CANCELLED"
       ],
       "default": "PENDING",
-      "required": true
+      "required": false
     },
     "purpose": {
       "type": "relation",

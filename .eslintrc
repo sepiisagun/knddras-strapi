@@ -1,9 +1,9 @@
 {
-  "parser": "babel-eslint",
-  "extends": "eslint:recommended",
+  "parser": "@babel/eslint-parser",
+  "extends": ["airbnb-base", "plugin:prettier/recommended"],
   "env": {
     "commonjs": true,
-    "es6": true,
+    "es2021": true,
     "node": true,
     "browser": false
   },
@@ -12,16 +12,35 @@
       "experimentalObjectRestSpread": true,
       "jsx": false
     },
+    "requireConfigFile": false,
+    "babelOptions": {
+      "babelrc": false,
+      "configFile": false,
+      "presets": ["@babel/preset-env"]
+    },
     "sourceType": "module"
   },
   "globals": {
     "strapi": true
   },
+  "plugins": ["prettier", "sort-destructure-keys"],
   "rules": {
-    "indent": ["error", 2, { "SwitchCase": 1 }],
-    "linebreak-style": ["error", "unix"],
+    "consistent-return": "warn",
+    "indent": [
+      "error",
+      "tab",
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "linebreak-style": ["error", "windows"],
     "no-console": 0,
-    "quotes": ["error", "single"],
-    "semi": ["error", "always"]
+    "no-tabs": "off",
+    "no-use-before-define": "error",
+    "prettier/prettier": "error",
+    "sort-destructure-keys/sort-destructure-keys": [
+      "error",
+      { "caseSensitive": true }
+    ]
   }
 }

@@ -9,13 +9,27 @@
     "build": "strapi build",
     "strapi": "strapi"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.23.5",
+    "@babel/eslint-parser": "^7.23.3",
+    "@babel/preset-env": "^7.23.5",
+    "eslint": "^8.55.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-sort-destructure-keys": "^1.5.0",
+    "eslint-watch": "^8.0.0",
+    "prettier": "^3.1.0"
+  },
   "dependencies": {
     "@strapi/plugin-i18n": "4.13.1",
     "@strapi/plugin-users-permissions": "4.13.1",
+    "@strapi/provider-email-nodemailer": "^4.15.5",
     "@strapi/provider-upload-aws-s3": "^4.13.1",
     "@strapi/strapi": "4.13.1",
     "@strapi/utils": "^4.14.5",
+    "lodash": "^4.17.21",
     "pg": "8.8.0",
     "strapi-plugin-transformer": "^3.1.2"
   },

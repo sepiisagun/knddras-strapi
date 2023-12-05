@@ -4,7 +4,8 @@
   "info": {
     "singularName": "appointment",
     "pluralName": "appointments",
-    "displayName": "Appointment"
+    "displayName": "Appointment",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -15,8 +16,18 @@
       "type": "date",
       "required": true
     },
-    "slot": {
+    "time": {
       "type": "time",
+      "required": true
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "ACCEPTED",
+        "REBOOK PENDING",
+        "CANCELLED"
+      ],
+      "default": "ACCEPTED",
       "required": true
     },
     "purpose": {
