@@ -59,7 +59,7 @@ module.exports = {
 			},
 		},
 	},
-	'api:record': {
+	'api::record': {
 		controllers: {
 			record: {
 				find: {
@@ -121,6 +121,9 @@ module.exports = {
 					enabled: true,
 				},
 				update: {
+					enabled: true,
+				},
+				me: {
 					enabled: true,
 				},
 			},

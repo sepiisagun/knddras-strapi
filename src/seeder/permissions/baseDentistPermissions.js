@@ -68,7 +68,7 @@ module.exports = {
 			},
 		},
 	},
-	'api:treatment': {
+	'api::treatment': {
 		controllers: {
 			treatment: {
 				create: {
