@@ -49,10 +49,10 @@ const createRole = async (newRole) => {
 };
 
 module.exports = async () => {
-	await updateRole(adminRole);
 	await updateRole(authenticatedRole);
 	await updateRole(publicRole);
 
+	await createRole(adminRole);
 	await createRole(associateDentistRole);
 	await createRole(dentalAssistantRole);
 	await createRole(dentistRole);
