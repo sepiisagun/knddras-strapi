@@ -20,6 +20,33 @@ module.exports = {
 					},
 				},
 			},
+			'api::guardian': {
+				controllers: {
+					guardian: {
+						create: {
+							enabled: true,
+						},
+						update: {
+							enabled: true,
+						},
+						delete: {
+							enabled: true,
+						},
+					},
+				},
+			},
+			'api::medical': {
+				controllers: {
+					medical: {
+						create: {
+							enabled: true,
+						},
+						update: {
+							enabled: true,
+						},
+					},
+				},
+			},
 			'api::record': {
 				controllers: {
 					record: {

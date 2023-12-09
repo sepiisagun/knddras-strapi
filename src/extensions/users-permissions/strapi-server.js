@@ -49,7 +49,7 @@ module.exports = (plugin) => {
 		}
 
 		const data = await strapi.entityService.findMany(moduleName, {
-			fields: ['firstName', 'lastName', 'mobileNumber', 'email'],
+			fields: ['firstName', 'lastName', 'mobileNumber', 'email', 'username'],
 			filters: {
 				role: {
 					type: 'authenticated',
