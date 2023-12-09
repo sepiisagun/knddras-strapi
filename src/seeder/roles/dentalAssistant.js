@@ -1,4 +1,4 @@
-const { merge } = require('lodash');
+const { merge, trimEnd } = require('lodash');
 
 const baseAuthenticatedPermissions = require('../permissions/baseAuthenticatedPermissions');
 
@@ -65,6 +65,9 @@ module.exports = {
 						update: {
 							enabled: true,
 						},
+						accept: {
+							enabled: true,
+						},
 					},
 				},
 			},
@@ -72,6 +75,9 @@ module.exports = {
 				controllers: {
 					user: {
 						patients: {
+							enabled: true,
+						},
+						doctors: {
 							enabled: true,
 						},
 					},
