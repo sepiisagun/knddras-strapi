@@ -17,9 +17,9 @@ module.exports = {
 					},
 				},
 			},
-			'api::conditions': {
+			'api::condition': {
 				controllers: {
-					conditions: {
+					condition: {
 						create: {
 							enabled: true,
 						},

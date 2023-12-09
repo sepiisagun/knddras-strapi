@@ -38,6 +38,31 @@ module.exports = (plugin) => {
 		ctx.body = sanitzedBody;
 	};
 
+	plugin.controllers.user.patients = async (ctx) => {
+		const { state } = ctx;
+		const { user } = state;
+
+		if (!user) {
+			return ctx.badRequest(null, [
+				{ messages: [{ id: 'No authorization header was found' }] },
+			]);
+		}
+
+		const data = await strapi.entityService.findMany(moduleName, {
+			fields: ['firstName', 'lastName', 'mobileNumber', 'email'],
+			filters: {
+				role: {
+					type: 'authenticated',
+				},
+			},
+			// populate: ['role'],
+		});
+
+		const sanitzedBody = await sanitizeOutput(data, moduleName);
+
+		ctx.body = sanitzedBody;
+	};
+
 	plugin.controllers.auth.register = async (ctx) => {
 		const pluginStore = await strapi.store({
 			environment: '',
@@ -281,6 +306,15 @@ module.exports = (plugin) => {
 		method: 'GET',
 		path: '/users/me',
 		handler: 'user.me',
+		config: {
+			policies: [],
+		},
+	});
+
+	plugin.routes['content-api'].routes.push({
+		method: 'GET',
+		path: '/users/patients',
+		handler: 'user.patients',
 		config: {
 			policies: [],
 		},

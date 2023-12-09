@@ -68,13 +68,22 @@ module.exports = {
 			},
 		},
 	},
-	'api:treatment': {
+	'api::treatment': {
 		controllers: {
 			treatment: {
 				create: {
 					enabled: true,
 				},
 				update: {
+					enabled: true,
+				},
+			},
+		},
+	},
+	'plugin::users-permissions': {
+		controllers: {
+			user: {
+				patients: {
 					enabled: true,
 				},
 			},
