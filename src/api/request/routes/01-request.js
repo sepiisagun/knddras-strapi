@@ -7,13 +7,8 @@ module.exports = {
 		},
 		{
 			method: 'PUT',
-			path: '/requests/:id/accpet',
+			path: '/requests/:id/accept',
 			handler: 'request.accept',
-		},
-		{
-			method: 'PUT',
-			path: '/requests/:id/reject',
-			handler: 'request.reject',
 		},
 	],
 };
