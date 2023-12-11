@@ -64,10 +64,9 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 	async accept(ctx) {
 		const { state } = ctx;
 		const { user } = state;
-		const { role } = user;
 		const { id } = ctx.params;
+		const { role } = user;
 		const { data } = ctx.request.body;
-
 		let request = await strapi.entityService.findOne(moduleName, id, {
 			populate: ['patient'],
 		});
@@ -78,57 +77,27 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 					status: 'ACCEPTED',
 				},
 			});
-
-			// const date = DateTime.fromISO(data.date).toFormat('yyyy-MM-dd');
-			// const time = DateTime.fromISO(data.date).toFormat('HH:mm:ss');
-			// // insert code logic for creation of appointment
-			// const appointment = await strapi.entityService.create('', {
-			// 	data: {
-			// 		date: data.date,
-			// 		time: data.slot,
-			// 		doctor: 1,
-			// 		patient: 5,
-			// 		purpose: 2,
-			// 		request: request.id,
-			// 	},
-			// });
-		} else {
-			return ctx.badRequest(
-				null,
-				formatMessage({
-					id: 'Request.update.accept',
-					message: 'Request Failed. Permission Denied',
-				}),
-			);
-		}
-
-		const sanitizedEntity = sanitizeOutput(request, moduleName);
-
-		return sanitizedEntity;
-	},
-
-	async reject(ctx) {
-		const { state } = ctx;
-		const { user } = state;
-		const { role } = user;
-		const { id } = ctx.params;
-
-		let request = await strapi.entityService.findOne(moduleName, id, {
-			populate: ['patient'],
-		});
-
-		if (role.type === 'dental_assistant') {
-			request = await strapi.entityService.update(moduleName, id, {
+			const date = DateTime.fromISO(data.date).toFormat('yyyy-MM-dd');
+			const time = DateTime.fromISO(data.date).toFormat('HH:mm:ss');
+			console.log(data);
+			await strapi.entityService.create('api::appointment.appointment', {
 				data: {
-					status: 'CANCELLED',
+					date,
+					time,
+					purpose: data.purpose,
+					patient: data.patient,
+					doctor: data.doctor,
+					request: request.id,
 				},
 			});
+
+			// email
 		} else {
 			return ctx.badRequest(
 				null,
 				formatMessage({
-					id: 'Request.update.reject',
-					message: 'Unable to reject request. Permission Denied.',
+					id: 'Request.update.cancel',
+					message: 'Unable to cancel request.',
 				}),
 			);
 		}
