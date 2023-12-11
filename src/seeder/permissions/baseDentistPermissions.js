@@ -80,4 +80,13 @@ module.exports = {
 			},
 		},
 	},
+	'plugin::users-permissions': {
+		controllers: {
+			user: {
+				patients: {
+					enabled: true,
+				},
+			},
+		},
+	},
 };

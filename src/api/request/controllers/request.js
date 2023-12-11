@@ -3,6 +3,7 @@
  */
 
 const { createCoreController } = require('@strapi/strapi').factories;
+const { DateTime } = require('luxon');
 const _ = require('lodash');
 const sanitizeOutput = require('../../../utils/sanitizeOutput');
 const formatMessage = require('../../../utils/formatMessage');
@@ -45,6 +46,52 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 					status: 'CANCELLED',
 				},
 			});
+		} else {
+			return ctx.badRequest(
+				null,
+				formatMessage({
+					id: 'Request.update.cancel',
+					message: 'Unable to cancel request.',
+				}),
+			);
+		}
+
+		const sanitizedEntity = sanitizeOutput(request, moduleName);
+
+		return sanitizedEntity;
+	},
+
+	async accept(ctx) {
+		const { state } = ctx;
+		const { user } = state;
+		const { id } = ctx.params;
+		const { role } = user;
+		const { data } = ctx.request.body;
+		let request = await strapi.entityService.findOne(moduleName, id, {
+			populate: ['patient'],
+		});
+
+		if (role.type === 'dental_assistant') {
+			request = await strapi.entityService.update(moduleName, id, {
+				data: {
+					status: 'ACCEPTED',
+				},
+			});
+			const date = DateTime.fromISO(data.date).toFormat('yyyy-MM-dd');
+			const time = DateTime.fromISO(data.date).toFormat('HH:mm:ss');
+			console.log(data);
+			await strapi.entityService.create('api::appointment.appointment', {
+				data: {
+					date,
+					time,
+					purpose: data.purpose,
+					patient: data.patient,
+					doctor: data.doctor,
+					request: request.id,
+				},
+			});
+
+			// email
 		} else {
 			return ctx.badRequest(
 				null,

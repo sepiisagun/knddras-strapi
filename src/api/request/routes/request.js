@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * request router
  */

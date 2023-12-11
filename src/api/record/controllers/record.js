@@ -99,7 +99,9 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 			},
 		});
 
-		updatePatientCredentials(data, _.get(user, 'id'));
+		if (user.role.type === 'authenticated') {
+			updatePatientCredentials(data, _.get(user, 'id'));
+		}
 		processMinorData(data, null, _.get(record, 'id'));
 
 		const sanitizedEntity = await sanitizeOutput(record, moduleName);
