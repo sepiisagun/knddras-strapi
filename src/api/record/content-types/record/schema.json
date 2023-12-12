@@ -4,7 +4,8 @@
   "info": {
     "singularName": "record",
     "pluralName": "records",
-    "displayName": "Record"
+    "displayName": "Record",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -39,12 +40,6 @@
     "birthdate": {
       "type": "date",
       "required": true
-    },
-    "religion": {
-      "type": "string"
-    },
-    "nationality": {
-      "type": "string"
     },
     "address": {
       "type": "text",

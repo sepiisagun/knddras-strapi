@@ -5,6 +5,7 @@
 const { createCoreController } = require('@strapi/strapi').factories;
 const _ = require('lodash');
 const sanitizeOutput = require('../../../utils/sanitizeOutput');
+const formatMessage = require('../../../utils/formatMessage');
 
 const moduleName = 'api::record.record';
 
@@ -98,6 +99,12 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 				nationality: recordData.nationality,
 				address: recordData.address,
 				minor: recordData.minor,
+				patient: recordData.patient,
+			},
+			populate: {
+				patient: {
+					fields: ['id'],
+				},
 			},
 		});
 
@@ -111,6 +118,7 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 			await strapi.entityService.create('api::medical.medical', {
 				data: {
 					...medical,
+					record: record.id,
 				},
 			});
 		}
@@ -120,6 +128,7 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 			await strapi.entityService.create('api::condition.condition', {
 				data: {
 					conditions,
+					record: record.id,
 				},
 			});
 		}
@@ -129,6 +138,7 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 			await strapi.entityService.create('api::dental-record.dental-record', {
 				data: {
 					...dental,
+					record: record.id,
 				},
 			});
 		}
@@ -176,5 +186,47 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 		const sanitizedEntity = await sanitizeOutput(record, moduleName);
 
 		return sanitizedEntity;
+	},
+
+	async fetchUsers(ctx) {
+		const { state } = ctx;
+		const { user } = state;
+		const { role } = user;
+
+		if (role.type === 'dental_assistant') {
+			const patientIds = await strapi.entityService.findMany(moduleName, {
+				fields: [],
+				populate: {
+					patient: {
+						fields: ['id'],
+					},
+				},
+			});
+
+			const userId = patientIds.map((item) => _.get(item, 'patient.id'));
+
+			const users = await strapi.entityService.findMany('plugin::users-permissions.user', {
+				filters: {
+					id: {
+						$notIn: userId,
+					},
+					role: {
+						type: 'authenticated',
+					},
+				},
+				fields: ['email', 'firstName', 'lastName'],
+			});
+
+			const sanitizedEntity = await sanitizeOutput(users, 'plugin::users-permissions.user');
+
+			return sanitizedEntity;
+		}
+		return ctx.badRequest(
+			null,
+			formatMessage({
+				id: 'Record.fetchUser.forbidden',
+				message: 'Permission denied.',
+			}),
+		);
 	},
 }));

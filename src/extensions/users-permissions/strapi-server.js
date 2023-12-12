@@ -41,6 +41,7 @@ module.exports = (plugin) => {
 	plugin.controllers.user.patients = async (ctx) => {
 		const { state } = ctx;
 		const { user } = state;
+		const { filters } = ctx.request.query;
 
 		if (!user) {
 			return ctx.badRequest(null, [
@@ -54,8 +55,8 @@ module.exports = (plugin) => {
 				role: {
 					type: 'authenticated',
 				},
+				...filters,
 			},
-			// populate: ['role'],
 		});
 
 		const sanitzedBody = await sanitizeOutput(data, moduleName);
@@ -279,7 +280,7 @@ module.exports = (plugin) => {
 				? {
 						id: 'Auth.form.error.username.taken',
 						message: 'Username already taken.',
-				  }
+					}
 				: { id: 'Auth.form.error.email.taken', message: 'Email already taken.' };
 
 			strapi.log.error('****ERROR MSG:', err);

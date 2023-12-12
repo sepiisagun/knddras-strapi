@@ -1,4 +1,4 @@
-const { merge, trimEnd } = require('lodash');
+const { merge } = require('lodash');
 
 const baseAuthenticatedPermissions = require('../permissions/baseAuthenticatedPermissions');
 
@@ -54,6 +54,9 @@ module.exports = {
 							enabled: true,
 						},
 						update: {
+							enabled: true,
+						},
+						fetchUsers: {
 							enabled: true,
 						},
 					},
