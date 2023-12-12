@@ -67,6 +67,7 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 		const { id } = ctx.params;
 		const { role } = user;
 		const { data } = ctx.request.body;
+
 		let request = await strapi.entityService.findOne(moduleName, id, {
 			populate: ['patient'],
 		});
@@ -79,7 +80,7 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 			});
 			const date = DateTime.fromISO(data.date).toFormat('yyyy-MM-dd');
 			const time = DateTime.fromISO(data.date).toFormat('HH:mm:ss');
-			console.log(data);
+
 			await strapi.entityService.create('api::appointment.appointment', {
 				data: {
 					date,
@@ -96,8 +97,41 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 			return ctx.badRequest(
 				null,
 				formatMessage({
-					id: 'Request.update.cancel',
-					message: 'Unable to cancel request.',
+					id: 'Request.update.accept',
+					message: 'Permission Denied.',
+				}),
+			);
+		}
+
+		const sanitizedEntity = sanitizeOutput(request, moduleName);
+
+		return sanitizedEntity;
+	},
+
+	async reject(ctx) {
+		const { state } = ctx;
+		const { user } = state;
+		const { id } = ctx.params;
+		const { role } = user;
+		const { data } = ctx.request.body;
+
+		let request = await strapi.entityService.findOne(moduleName, id, {
+			populate: ['patient'],
+		});
+
+		if (role.type === 'dental_assistant') {
+			request = await strapi.entityService.update(moduleName, id, {
+				data: {
+					reason: data.reason,
+					status: 'REJECTED',
+				},
+			});
+		} else {
+			return ctx.badRequest(
+				null,
+				formatMessage({
+					id: 'Request.update.reject',
+					message: 'Permission Denied.',
 				}),
 			);
 		}

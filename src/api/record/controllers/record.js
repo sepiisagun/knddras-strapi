@@ -84,25 +84,54 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 		const { state } = ctx;
 		const { user } = state;
 		const { data } = ctx.request.body;
+		const { conditions, dental, medical, record: recordData } = data;
 
+		// process records
 		const record = await strapi.entityService.create(moduleName, {
 			data: {
-				firstName: data.firstName,
-				lastName: data.lastName,
-				middleInitial: data.middleInitial,
-				sex: data.sex,
-				birthdate: data.birthdate,
-				religion: data.religion,
-				nationality: data.nationality,
-				address: data.address,
-				minor: data.minor,
+				firstName: recordData.firstName,
+				lastName: recordData.lastName,
+				middleInitial: recordData.middleInitial,
+				sex: recordData.sex,
+				birthdate: recordData.birthdate,
+				religion: recordData.religion,
+				nationality: recordData.nationality,
+				address: recordData.address,
+				minor: recordData.minor,
 			},
 		});
 
 		if (user.role.type === 'authenticated') {
-			updatePatientCredentials(data, _.get(user, 'id'));
+			updatePatientCredentials(recordData, _.get(user, 'id'));
 		}
 		processMinorData(data, null, _.get(record, 'id'));
+
+		// process medical history
+		if (!_.isEmpty(medical)) {
+			await strapi.entityService.create('api::medical.medical', {
+				data: {
+					...medical,
+				},
+			});
+		}
+
+		// process conditions
+		if (!_.isEmpty(conditions)) {
+			await strapi.entityService.create('api::condition.condition', {
+				data: {
+					conditions,
+				},
+			});
+		}
+
+		// process dental record
+		if (!_.isEmpty(dental)) {
+			await strapi.entityService.create('api::dental-record.dental-record', {
+				data: {
+					...dental,
+				},
+			});
+		}
 
 		const sanitizedEntity = await sanitizeOutput(record, moduleName);
 

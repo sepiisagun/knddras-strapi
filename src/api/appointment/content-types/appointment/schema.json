@@ -24,7 +24,7 @@
       "type": "enumeration",
       "enum": [
         "ACCEPTED",
-        "REBOOK PENDING",
+        "REBOOKING",
         "CANCELLED"
       ],
       "default": "ACCEPTED",

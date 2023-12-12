@@ -10,5 +10,10 @@ module.exports = {
 			path: '/requests/:id/accept',
 			handler: 'request.accept',
 		},
+		{
+			method: 'PUT',
+			path: '/requests/:id/reject',
+			handler: 'request.reject',
+		},
 	],
 };
