@@ -91,6 +91,8 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 	},
 
 	async createSelf(ctx) {
+		const { user } = ctx.state;
+		const { id } = user;
 		const { data } = ctx.request.body;
 		// process records
 		const record = await strapi.entityService.create(moduleName, {
@@ -104,7 +106,7 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 				nationality: data.nationality,
 				address: data.address,
 				minor: data.minor,
-				patient: data.patient,
+				patient: id,
 			},
 			populate: {
 				patient: {
@@ -112,6 +114,8 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 				},
 			},
 		});
+
+		updatePatientCredentials(data, id);
 
 		processMinorData(data, null, _.get(record, 'id'));
 
