@@ -17,10 +17,16 @@ module.exports = {
 	'api::dental-record': {
 		controllers: {
 			'dental-record': {
+				create: {
+					enabled: true,
+				},
 				find: {
 					enabled: true,
 				},
 				findOne: {
+					enabled: true,
+				},
+				update: {
 					enabled: true,
 				},
 			},

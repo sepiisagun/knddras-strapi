@@ -383,7 +383,7 @@ module.exports = (plugin) => {
 				? {
 						id: 'Auth.form.error.username.taken',
 						message: 'Username already taken.',
-				  }
+					}
 				: { id: 'Auth.form.error.email.taken', message: 'Email already taken.' };
 
 			strapi.log.error('****ERROR MSG:', err);
