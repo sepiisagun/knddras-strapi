@@ -83,6 +83,18 @@ module.exports = {
 						update: {
 							enabled: true,
 						},
+						cancel: {
+							enabled: true,
+						},
+					},
+				},
+			},
+			'api::treatment': {
+				controllers: {
+					treatment: {
+						userTransactions: {
+							enabled: true,
+						},
 					},
 				},
 			},

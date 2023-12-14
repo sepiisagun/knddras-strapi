@@ -2,8 +2,8 @@ module.exports = {
 	routes: [
 		{
 			method: 'GET',
-			path: '/treatments/findOne',
-			handler: 'treatment.findOne',
+			path: '/treatments/userTransactions',
+			handler: 'treatment.userTransactions',
 		},
 	],
 };

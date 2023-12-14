@@ -8,7 +8,7 @@ const sanitizeOutput = require('../../../utils/sanitizeOutput');
 
 const moduleName = 'api::treatment.treatment';
 module.exports = createCoreController(moduleName, ({ strapi }) => ({
-	async findOne(ctx) {
+	async userTransactions(ctx) {
 		const { filters, paginate, sort = [] } = ctx.request.query;
 		const { patient } = filters;
 		const { id: userId } = patient;
