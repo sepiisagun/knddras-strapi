@@ -4,7 +4,8 @@
   "info": {
     "singularName": "tooth-status",
     "pluralName": "tooth-statuses",
-    "displayName": "Tooth Status"
+    "displayName": "Tooth Status",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -12,6 +13,10 @@
   "pluginOptions": {},
   "attributes": {
     "status": {
+      "type": "string",
+      "required": true
+    },
+    "code": {
       "type": "string",
       "required": true
     }

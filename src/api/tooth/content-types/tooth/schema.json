@@ -1,22 +1,28 @@
 {
-  "kind": "collectionType",
+  "kind": "singleType",
   "collectionName": "teeth",
   "info": {
     "singularName": "tooth",
     "pluralName": "teeth",
-    "displayName": "Tooth"
+    "displayName": "Tooth",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
   },
   "pluginOptions": {},
   "attributes": {
-    "toothCode": {
-      "type": "string",
-      "required": true,
-      "maxLength": 2,
-      "minLength": 2,
-      "unique": true
+    "sectionOne": {
+      "type": "json"
+    },
+    "sectionTwo": {
+      "type": "json"
+    },
+    "sectionThree": {
+      "type": "json"
+    },
+    "sectionFour": {
+      "type": "json"
     }
   }
 }

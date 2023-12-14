@@ -56,9 +56,6 @@ module.exports = {
 				find: {
 					enabled: true,
 				},
-				findOne: {
-					enabled: true,
-				},
 			},
 		},
 	},

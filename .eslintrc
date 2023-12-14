@@ -33,7 +33,7 @@
         "SwitchCase": 1
       }
     ],
-    "linebreak-style": ["error", "windows"],
+    "linebreak-style": ["error", "windows", "unix"],
     "no-console": 0,
     "no-tabs": "off",
     "no-use-before-define": "error",
