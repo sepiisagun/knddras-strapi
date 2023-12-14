@@ -81,6 +81,76 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 		return sanitizedEntity;
 	},
 
+	async createSelf(ctx) {
+		const { data } = ctx.request.body;
+		// process records
+		const record = await strapi.entityService.create(moduleName, {
+			data: {
+				firstName: data.firstName,
+				lastName: data.lastName,
+				middleInitial: data.middleInitial,
+				sex: data.sex,
+				birthdate: data.birthdate,
+				religion: data.religion,
+				nationality: data.nationality,
+				address: data.address,
+				minor: data.minor,
+				patient: data.patient,
+			},
+			populate: {
+				patient: {
+					fields: ['id'],
+				},
+			},
+		});
+
+		processMinorData(data, null, _.get(record, 'id'));
+
+		const sanitizedEntity = await sanitizeOutput(record, moduleName);
+
+		return sanitizedEntity;
+	},
+
+	async updateSelf(ctx) {
+		const { id } = ctx.params;
+		const { data } = ctx.request.body;
+
+		const oldRecord = await strapi.entityService.findOne(moduleName, id, {
+			populate: { patient: true },
+		});
+
+		const record = await strapi.entityService.update(moduleName, id, {
+			data: {
+				firstName: data.firstName,
+				lastName: data.lastName,
+				middleInitial: data.middleInitial,
+				sex: data.sex,
+				birthdate: data.birthdate,
+				religion: data.religion,
+				nationality: data.nationality,
+				address: data.address,
+				minor: data.minor,
+			},
+		});
+
+		const patientId = _.get(oldRecord, 'patient.id');
+		updatePatientCredentials(data, patientId);
+
+		const [oldGuardian] = await strapi.entityService.findMany('api::guardian.guardian', {
+			filters: {
+				record: {
+					id: oldRecord.id,
+				},
+			},
+		});
+
+		processMinorData(data, oldGuardian, _.get(record, 'id'));
+
+		const sanitizedEntity = await sanitizeOutput(record, moduleName);
+
+		return sanitizedEntity;
+	},
+
 	async create(ctx) {
 		const { state } = ctx;
 		const { user } = state;

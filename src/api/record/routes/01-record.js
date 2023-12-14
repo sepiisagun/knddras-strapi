@@ -5,5 +5,15 @@ module.exports = {
 			path: '/records/fetchUsers',
 			handler: 'record.fetchUsers',
 		},
+		{
+			method: 'POST',
+			path: '/records/create-self',
+			handler: 'record.createSelf',
+		},
+		{
+			method: 'PUT',
+			path: '/records/update-self',
+			handler: 'record.updateSelf',
+		},
 	],
 };
