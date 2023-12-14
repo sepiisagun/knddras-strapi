@@ -65,6 +65,12 @@ module.exports = {
 						update: {
 							enabled: true,
 						},
+						createSelf: {
+							enabled: true,
+						},
+						updateSelf: {
+							enabled: true,
+						},
 					},
 				},
 			},
