@@ -52,11 +52,12 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 	async findOne(ctx) {
 		const { user } = ctx.state;
 		const { id } = user;
+		const { id: patientId } = ctx.params;
 
 		let [record] = await strapi.entityService.findMany(moduleName, {
 			filters: {
 				patient: {
-					id,
+					id: !_.isEmpty(patientId) ? patientId : id,
 				},
 			},
 			populate: ['patient'],
