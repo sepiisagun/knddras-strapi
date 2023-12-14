@@ -164,7 +164,7 @@ module.exports = (plugin) => {
 		const { state } = ctx;
 		const { user } = state;
 		const { role } = user;
-		const { fields = [] } = ctx.request.query;
+		const { fields = [], filters } = ctx.request.query;
 
 		if (!user) {
 			return ctx.badRequest(null, [
@@ -184,6 +184,7 @@ module.exports = (plugin) => {
 						$in: ['associate_dentist', 'dentist', 'dental_assistant'],
 					},
 				},
+				...filters,
 			},
 			populate: ['role'],
 		});
