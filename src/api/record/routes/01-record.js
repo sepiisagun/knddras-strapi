@@ -12,7 +12,7 @@ module.exports = {
 		},
 		{
 			method: 'PUT',
-			path: '/records/update-self',
+			path: '/records/update-self/:id',
 			handler: 'record.updateSelf',
 		},
 	],
