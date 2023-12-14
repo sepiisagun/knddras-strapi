@@ -4,6 +4,8 @@
 // @ts-nocheck
 const moduleName = 'plugin::users-permissions.user';
 const _ = require('lodash');
+// eslint-disable-next-line import/no-extraneous-dependencies
+const Promise = require('bluebird');
 
 const sanitizeOutput = require('../../utils/sanitizeOutput');
 const parseMultipartData = require('../../utils/parseMultipartData');
@@ -38,6 +40,48 @@ module.exports = (plugin) => {
 		ctx.body = sanitzedBody;
 	};
 
+	plugin.controllers.user.createUser = async (ctx) => {
+		const { state } = ctx;
+		const { user } = state;
+		const { role } = user;
+		const { body } = ctx.request;
+
+		if (!user || role.type !== 'admin')
+			return ctx.badRequest(null, [{ messages: [{ id: 'Permission Denied.' }] }]);
+
+		const data = await strapi.entityService.create(moduleName, {
+			data: {
+				...body,
+				password: 'Knddras123!@#',
+			},
+		});
+
+		const sanitzedBody = await sanitizeOutput(data, moduleName);
+
+		ctx.body = sanitzedBody;
+	};
+
+	plugin.controllers.user.updateUser = async (ctx) => {
+		const { state } = ctx;
+		const { user } = state;
+		const { role } = user;
+		const { id } = ctx.params;
+		const { body } = ctx.request;
+
+		if (!user || role.type === 'authenticated')
+			return ctx.badRequest(null, [{ messages: [{ id: 'Permission Denied.' }] }]);
+
+		const data = await strapi.entityService.update(moduleName, id, {
+			data: {
+				...body,
+			},
+		});
+
+		const sanitzedBody = await sanitizeOutput(data, moduleName);
+
+		ctx.body = sanitzedBody;
+	};
+
 	plugin.controllers.user.patients = async (ctx) => {
 		const { state } = ctx;
 		const { user } = state;
@@ -59,9 +103,35 @@ module.exports = (plugin) => {
 			},
 		});
 
-		const sanitzedBody = await sanitizeOutput(data, moduleName);
+		const sanitizedBody = await sanitizeOutput(data, moduleName);
 
-		ctx.body = sanitzedBody;
+		let patient = [];
+
+		patient = await Promise.map(sanitizedBody, async (userData) => {
+			const [record] = await strapi.entityService.findMany('api::record.record', {
+				filters: {
+					patient: userData.id,
+				},
+				populate: 'patient',
+			});
+
+			let treatment = [];
+			if (!_.isEmpty(record)) {
+				treatment = await strapi.entityService.findMany('api::treatment.treatment', {
+					fields: ['createdAt'],
+					filters: {
+						record: record.id,
+					},
+					sort: 'createdAt:desc',
+					limit: 1,
+				});
+			}
+
+			const status = !_.isEmpty(record);
+			return { ...userData, status, treatment };
+		});
+
+		ctx.body = patient;
 	};
 
 	plugin.controllers.user.doctors = async (ctx) => {
@@ -83,7 +153,39 @@ module.exports = (plugin) => {
 					},
 				},
 			},
-			// populate: ['role'],
+		});
+
+		const sanitzedBody = await sanitizeOutput(data, moduleName);
+
+		ctx.body = sanitzedBody;
+	};
+
+	plugin.controllers.user.employees = async (ctx) => {
+		const { state } = ctx;
+		const { user } = state;
+		const { role } = user;
+		const { fields = [] } = ctx.request.query;
+
+		if (!user) {
+			return ctx.badRequest(null, [
+				{ messages: [{ id: 'No authorization header was found' }] },
+			]);
+		}
+
+		if (role.type !== 'admin') {
+			return ctx.badRequest(null, [{ messages: [{ id: 'Permission denied.' }] }]);
+		}
+
+		const data = await strapi.entityService.findMany(moduleName, {
+			fields: [...fields],
+			filters: {
+				role: {
+					type: {
+						$in: ['associate_dentist', 'dentist', 'dental_assistant'],
+					},
+				},
+			},
+			populate: ['role'],
 		});
 
 		const sanitzedBody = await sanitizeOutput(data, moduleName);
@@ -280,7 +382,7 @@ module.exports = (plugin) => {
 				? {
 						id: 'Auth.form.error.username.taken',
 						message: 'Username already taken.',
-					}
+				  }
 				: { id: 'Auth.form.error.email.taken', message: 'Email already taken.' };
 
 			strapi.log.error('****ERROR MSG:', err);
@@ -340,6 +442,24 @@ module.exports = (plugin) => {
 	});
 
 	plugin.routes['content-api'].routes.push({
+		method: 'PUT',
+		path: '/users/update/:id',
+		handler: 'user.updateUser',
+		config: {
+			policies: [],
+		},
+	});
+
+	plugin.routes['content-api'].routes.push({
+		method: 'POST',
+		path: '/users/create',
+		handler: 'user.createUser',
+		config: {
+			policies: [],
+		},
+	});
+
+	plugin.routes['content-api'].routes.push({
 		method: 'GET',
 		path: '/users/patients',
 		handler: 'user.patients',
@@ -352,6 +472,15 @@ module.exports = (plugin) => {
 		method: 'GET',
 		path: '/users/doctors',
 		handler: 'user.doctors',
+		config: {
+			policies: [],
+		},
+	});
+
+	plugin.routes['content-api'].routes.push({
+		method: 'GET',
+		path: '/users/employees',
+		handler: 'user.employees',
 		config: {
 			policies: [],
 		},
