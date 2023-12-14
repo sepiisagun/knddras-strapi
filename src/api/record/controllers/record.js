@@ -50,7 +50,8 @@ const processMinorData = async (data, oldGuardian, recordId) => {
 // eslint-disable-next-line no-unused-vars
 module.exports = createCoreController(moduleName, ({ strapi }) => ({
 	async findOne(ctx) {
-		const { id } = ctx.params;
+		const { user } = ctx.state;
+		const { id } = user;
 
 		let [record] = await strapi.entityService.findMany(moduleName, {
 			filters: {
@@ -61,20 +62,27 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 			populate: ['patient'],
 		});
 
-		const [guardian] = await strapi.entityService.findMany('api::guardian.guardian', {
-			filters: {
-				record: {
-					id: record.id,
-				},
-			},
-		});
-
+		let guardian;
 		record = {
 			...record,
-			guardian: {
-				...guardian,
-			},
 		};
+
+		if (!_.isEmpty(record) && !_.isEmpty(_.get(record, 'guardian'))) {
+			[guardian] = await strapi.entityService.findMany('api::guardian.guardian', {
+				filters: {
+					record: {
+						id: record.id,
+					},
+				},
+			});
+
+			record = {
+				...record,
+				guardian: {
+					...guardian,
+				},
+			};
+		}
 
 		const sanitizedEntity = await sanitizeOutput(record, moduleName);
 
