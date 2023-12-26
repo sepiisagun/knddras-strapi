@@ -26,6 +26,9 @@ module.exports = {
 						update: {
 							enabled: true,
 						},
+						findSelf: {
+							enabled: true,
+						},
 					},
 				},
 			},
