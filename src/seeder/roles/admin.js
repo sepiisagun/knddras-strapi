@@ -93,6 +93,9 @@ module.exports = {
 					updateUser: {
 						enabled: true,
 					},
+					employeeRoles: {
+						enabled: true,
+					},
 				},
 				role: {
 					find: {

@@ -194,6 +194,34 @@ module.exports = (plugin) => {
 		ctx.body = sanitzedBody;
 	};
 
+	plugin.controllers.user.employeeRoles = async (ctx) => {
+		const { state } = ctx;
+		const { user } = state;
+		const { role } = user;
+
+		if (!user) {
+			return ctx.badRequest(null, [
+				{ messages: [{ id: 'No authorization header was found' }] },
+			]);
+		}
+
+		if (role.type !== 'admin') {
+			return ctx.badRequest(null, [{ messages: [{ id: 'Permission denied.' }] }]);
+		}
+
+		const data = await strapi.entityService.findMany("plugin::users-permissions.role", {
+			filters: {
+				type: {
+					$notIn: ["authenticated", "public"],
+				},
+			},
+		});
+
+		const sanitzedBody = await sanitizeOutput(data, moduleName);
+
+		ctx.body = sanitzedBody;
+	};
+
 	plugin.controllers.auth.register = async (ctx) => {
 		const pluginStore = await strapi.store({
 			environment: '',
@@ -482,6 +510,15 @@ module.exports = (plugin) => {
 		method: 'GET',
 		path: '/users/employees',
 		handler: 'user.employees',
+		config: {
+			policies: [],
+		},
+	});
+
+	plugin.routes['content-api'].routes.push({
+		method: 'GET',
+		path: '/users/employeeRoles',
+		handler: 'user.employeeRoles',
 		config: {
 			policies: [],
 		},
