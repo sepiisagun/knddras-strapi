@@ -23,6 +23,18 @@ module.exports = {
 			},
 		},
 	},
+	'api::emergency-contact': {
+		controllers: {
+			'emergency-contact': {
+				find: {
+					enabled: true,
+				},
+				findOne: {
+					enabled: true,
+				},
+			},
+		},
+	},
 	'api::guardian': {
 		controllers: {
 			guardian: {

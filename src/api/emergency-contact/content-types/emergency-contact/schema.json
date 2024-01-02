@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "emergency_contacts",
+  "info": {
+    "singularName": "emergency-contact",
+    "pluralName": "emergency-contacts",
+    "displayName": "Emergency Contact",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "mobileNumber": {
+      "type": "string",
+      "maxLength": 12,
+      "minLength": 7,
+      "required": true
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}

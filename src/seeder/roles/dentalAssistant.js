@@ -83,6 +83,9 @@ module.exports = {
 						doctors: {
 							enabled: true,
 						},
+						updateUser: {
+							enabled: true,
+						},
 					},
 				},
 			},

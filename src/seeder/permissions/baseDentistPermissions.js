@@ -89,6 +89,9 @@ module.exports = {
 				patients: {
 					enabled: true,
 				},
+				updateUser: {
+					enabled: true,
+				},
 			},
 		},
 	},

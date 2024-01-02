@@ -31,9 +31,24 @@ module.exports = (plugin) => {
 			]);
 		}
 
-		const data = await strapi.entityService.findOne(moduleName, user.id, {
+		let data = await strapi.entityService.findOne(moduleName, user.id, {
 			populate: 'role',
 		});
+
+		const [contact] = await strapi.entityService.findMany('api::emergency-contact.emergency-contact', {
+			filters: {
+				user: {
+					id: _.get(user, "id"),
+				},
+			},
+		});
+
+		data = {
+			...data,
+			emergencyContact: {
+				...contact,
+			}
+		}
 
 		const sanitzedBody = await sanitizeOutput(data, moduleName);
 
@@ -76,6 +91,32 @@ module.exports = (plugin) => {
 				...body,
 			},
 		});
+
+		const [contact] = await strapi.entityService.findMany('api::emergency-contact.emergency-contact', {
+			filters: {
+				user: {
+					id: id,
+				},
+			},
+		});
+
+		if (_.isEmpty(contact)) {
+			await strapi.entityService.create('api::emergency-contact.emergency-contact', {
+				data: {
+					name: body.emergencyContactName,
+					mobileNumber: body.emergencyContactNumber,
+					user: id,
+				}
+			})
+		} else {
+			const contactId = _.get(contact, 'id');
+			await strapi.entityService.update('api::emergency-contact.emergency-contact', contactId, {
+				data: {
+					name: body.emergencyContactName,
+					mobileNumber: body.emergencyContactNumber,
+				}
+			})
+		}
 
 		const sanitzedBody = await sanitizeOutput(data, moduleName);
 

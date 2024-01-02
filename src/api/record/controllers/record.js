@@ -47,6 +47,27 @@ const processMinorData = async (data, oldGuardian, recordId) => {
 	}
 };
 
+const processEmergencyContact = async (action, data, oldContact, userId) => {
+	const module = 'api::emergency-contact.emergency-contact';
+	if (action === 'create') {
+		await strapi.entityService.create(module, {
+			data: {
+				name: data.emergencyContactName,
+				mobileNumber: data.emergencyContactNumber,
+				user: userId,
+			}
+		})
+	} else {
+		const contactId = _.get(oldContact, 'id');
+		await strapi.entityService.update(module, contactId, {
+			data: {
+				name: data.emergencyContactName,
+				mobileNumber: data.emergencyContactNumber,
+			}
+		})
+	}
+}
+
 // eslint-disable-next-line no-unused-vars
 module.exports = createCoreController(moduleName, ({ strapi }) => ({
 	async findOne(ctx) {
@@ -68,21 +89,38 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 			...record,
 		};
 
-		if (!_.isEmpty(record) && !_.isEmpty(_.get(record, 'guardian'))) {
-			[guardian] = await strapi.entityService.findMany('api::guardian.guardian', {
+		if (!_.isEmpty(record)) {
+			const [emergencyContact] = await strapi.entityService.findMany('api::emergency-contact.emergency-contact', {
 				filters: {
-					record: {
-						id: record.id,
+					user: {
+						id: !_.isEmpty(patientId) ? patientId : id,
 					},
 				},
 			});
-
+	
 			record = {
 				...record,
-				guardian: {
-					...guardian,
+				emergencyContact: {
+					...emergencyContact,
 				},
 			};
+			
+			if (!_.isEmpty(_.get(record, 'guardian'))) {
+				[guardian] = await strapi.entityService.findMany('api::guardian.guardian', {
+					filters: {
+						record: {
+							id: record.id,
+						},
+					},
+				});
+	
+				record = {
+					...record,
+					guardian: {
+						...guardian,
+					},
+				};
+			}
 		}
 
 		const sanitizedEntity = await sanitizeOutput(record, moduleName);
@@ -119,6 +157,8 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 
 		processMinorData(data, null, _.get(record, 'id'));
 
+		processEmergencyContact('create', data, null, id);
+
 		const sanitizedEntity = await sanitizeOutput(record, moduleName);
 
 		return sanitizedEntity;
@@ -127,6 +167,8 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 	async updateSelf(ctx) {
 		const { id } = ctx.params;
 		const { data } = ctx.request.body;
+		const { user } = ctx.state;
+		const { id: userId } = user;
 
 		const oldRecord = await strapi.entityService.findOne(moduleName, id, {
 			populate: { patient: true },
@@ -158,6 +200,16 @@ module.exports = createCoreController(moduleName, ({ strapi }) => ({
 		});
 
 		processMinorData(data, oldGuardian, _.get(record, 'id'));
+
+		const [oldContact] = await strapi.entityService.findMany('api::emergency-contact.emergency-contact', {
+			filters: {
+				user: {
+					id: userId,
+				},
+			},
+		});
+
+		processEmergencyContact('update', data, oldContact, null);
 
 		const sanitizedEntity = await sanitizeOutput(record, moduleName);
 
