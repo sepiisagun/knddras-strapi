@@ -4,7 +4,8 @@
   "info": {
     "singularName": "treatment",
     "pluralName": "treatments",
-    "displayName": "Treatment"
+    "displayName": "Treatment",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -20,6 +21,15 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::record.record"
+    },
+    "toothOperated": {
+      "type": "string",
+      "required": true
+    },
+    "appointment": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::appointment.appointment"
     }
   }
 }
